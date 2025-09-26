@@ -49,9 +49,9 @@ export function MapsErrorComponent({ error, className = '', height = '400px' }: 
               <p className="font-medium mb-2">Passo-a-passo para resolver:</p>
               <ol className="list-decimal list-inside space-y-1">
                 <li className="text-xs">Acesse o Google Cloud Console</li>
-                <li className="text-xs">Vá em "APIs e Serviços" → "Credenciais"</li>
+                <li className="text-xs">Vá em &quot;APIs e Serviços&quot; → &quot;Credenciais&quot;</li>
                 <li className="text-xs">Clique na sua chave de API: <code className="bg-yellow-100 px-1 rounded text-xs">AIzaSyDKyyxv3ktBWZcmsk1GyyamnahmhwvcKSc</code></li>
-                <li className="text-xs">Em "Restrições de sites", adicione EXATAMENTE:</li>
+                <li className="text-xs">Em &quot;Restrições de sites&quot;, adicione EXATAMENTE:</li>
                 <ul className="list-disc list-inside ml-2 mt-1 space-y-0">
                   <li className="text-xs"><code className="bg-gray-100 px-1 rounded">http://localhost:3001/*</code></li>
                   <li className="text-xs"><code className="bg-gray-100 px-1 rounded">http://localhost:3000/*</code></li>
@@ -67,7 +67,7 @@ export function MapsErrorComponent({ error, className = '', height = '400px' }: 
               {isLocalhostError && (
                 <div className="bg-yellow-50 border border-yellow-200 p-2 rounded mt-2 text-xs text-yellow-800">
                   🔧 <strong>Url atual:</strong> {window.location.href}<br/>
-                  ✅ <strong>Garanta que "http://localhost:3001/*" inclui esta página!</strong><br/>
+                  ✅ <strong>Garanta que &quot;http://localhost:3001/*&quot; inclui esta página!</strong><br/>
                   🔍 <strong>Se ainda não funcionar, adicione especificamente:</strong><br/>
                   <code className="bg-yellow-200 px-1 rounded">{window.location.href}/*</code>
                 </div>

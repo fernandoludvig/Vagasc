@@ -222,7 +222,7 @@ export default function TestReferrerErrorPage() {
               <ol className="text-sm text-red-700 space-y-1 list-decimal list-inside">
                 <li>Acesse <a href="https://console.cloud.google.com/apis/credentials" target="_blank" className="text-blue-600 hover:underline">Google Cloud Console → Credenciais</a></li>
                 <li>Clique na sua chave de API (chave usada: <code>AIzaSyDKyyxv3ktBWZcmsk1GyyamnahmhwvcKSc</code>)</li>
-                <li>Em "Restrições de sites" (referer), certifique-se que tem:</li>
+                <li>Em &quot;Restrições de sites&quot; (referer), certifique-se que tem:</li>
                 <ul className="text-xs text-red-600 ml-4 space-y-1">
                   <li>✅ <code>http://localhost:3001/*</code></li>
                   <li>✅ <code>http://localhost:3000/*</code></li>
@@ -233,7 +233,7 @@ export default function TestReferrerErrorPage() {
               </ol>
             </div>
             <div className="bg-red-100 p-3 rounded border border-red-200 text-sm text-red-800">
-              <strong>💡 Dica:</strong> Para um teste rápido, remova temporariamente TODAS as restrições de site (selecione "Não restringir a chave") e teste se funciona. Se funcionar, o problema é na configuração do referer.
+              <strong>💡 Dica:</strong> Para um teste rápido, remova temporariamente TODAS as restrições de site (selecione &quot;Não restringir a chave&quot;) e teste se funciona. Se funcionar, o problema é na configuração do referer.
             </div>
           </CardContent>
         </Card>

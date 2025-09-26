@@ -468,7 +468,7 @@ export default function Home() {
                   ))}
                 </div>
                 <CardDescription className="text-base leading-relaxed italic">
-                  "Ganho R$ 400/mês com minha vaga na Lagoa. Pago a conta de luz só com isso! App super fácil de usar e sempre tem gente querendo estacionar."
+                  &quot;Ganho R$ 400/mês com minha vaga na Lagoa. Pago a conta de luz só com isso! App super fácil de usar e sempre tem gente querendo estacionar.&quot;
                 </CardDescription>
               </CardHeader>
             </Card>
@@ -493,7 +493,7 @@ export default function Home() {
                   ))}
                 </div>
                 <CardDescription className="text-base leading-relaxed italic">
-                  "No Réveillon fiz R$ 600 em 3 dias. Melhor investimento que já fiz. Agora minha vaga trabalha para mim o ano todo!"
+                  &quot;No Réveillon fiz R$ 600 em 3 dias. Melhor investimento que já fiz. Agora minha vaga trabalha para mim o ano todo!&quot;
                 </CardDescription>
               </CardHeader>
             </Card>
@@ -518,7 +518,7 @@ export default function Home() {
                   ))}
                 </div>
                 <CardDescription className="text-base leading-relaxed italic">
-                  "App super fácil de usar. Cadastrei em 5 minutos e já recebi a primeira reserva. Segurança total e pagamento automático."
+                  &quot;App super fácil de usar. Cadastrei em 5 minutos e já recebi a primeira reserva. Segurança total e pagamento automático.&quot;
                 </CardDescription>
               </CardHeader>
             </Card>
@@ -543,7 +543,7 @@ export default function Home() {
                   ))}
                 </div>
                 <CardDescription className="text-base leading-relaxed italic">
-                  "Acabou meu sofrimento de procurar vaga no Centro! Agora reservo pelo app e chego direto. Economizo 30 minutos por dia."
+                  &quot;Acabou meu sofrimento de procurar vaga no Centro! Agora reservo pelo app e chego direto. Economizo 30 minutos por dia.&quot;
                 </CardDescription>
               </CardHeader>
             </Card>
@@ -565,7 +565,7 @@ export default function Home() {
                   ))}
                 </div>
                 <CardDescription className="text-base leading-relaxed italic">
-                  "Perfeito para ir à praia! Vaga a 2 quadras da Joaquina por R$ 15. Muito mais barato que estacionamento tradicional."
+                  &quot;Perfeito para ir à praia! Vaga a 2 quadras da Joaquina por R$ 15. Muito mais barato que estacionamento tradicional.&quot;
                 </CardDescription>
               </CardHeader>
             </Card>
