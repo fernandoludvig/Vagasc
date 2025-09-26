@@ -24,7 +24,8 @@ export function MapsErrorComponent({ error, className = '', height = '400px' }: 
   }
 
   const isRefererError = error.includes('RefererNotAllowedMapError') || error.includes('🔑 ERRO')
-  const isLocalhostError = window.location.hostname === 'localhost' && (window.location.port === '3001') {/* Detecta localhost:3001 */}
+  // Detecta localhost:3001
+  const isLocalhostError = window.location.hostname === 'localhost' && (window.location.port === '3001')
 
   if (isRefererError) {
     return (
