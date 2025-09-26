@@ -1,33 +1,56 @@
-import { auth } from '@/lib/auth'
 import { NextResponse } from 'next/server'
+import type { NextRequest } from 'next/server'
 
-export default auth((req) => {
-  const { nextUrl } = req
-  const isLoggedIn = !!req.auth
+export function middleware(request: NextRequest) {
+  const { nextUrl } = request
+  const pathname = nextUrl.pathname
 
-  const isApiAuthRoute = nextUrl.pathname.startsWith('/api/auth')
-  const isApiDebugRoute = nextUrl.pathname.includes('/debug') || nextUrl.pathname.includes('/test')
-  const isApiPublicRoute = nextUrl.pathname.startsWith('/api/spaces/search')
-  const isPublicRoute = ['/', '/search', '/space'].includes(nextUrl.pathname)
-  const isAuthRoute = ['/login', '/register'].includes(nextUrl.pathname)
+  // Rotas públicas que não precisam de autenticação
+  const publicRoutes = [
+    '/',
+    '/search',
+    '/spaces',
+    '/api/spaces/search',
+    '/api/auth',
+    '/login',
+    '/register'
+  ]
 
-  if (isApiAuthRoute || isApiDebugRoute || isApiPublicRoute) {
+  // Rotas de API que são públicas
+  const publicApiRoutes = [
+    '/api/spaces/search',
+    '/api/auth',
+    '/api/stripe/webhook'
+  ]
+
+  // Verificar se é uma rota pública
+  const isPublicRoute = publicRoutes.some(route => pathname.startsWith(route))
+  const isPublicApiRoute = publicApiRoutes.some(route => pathname.startsWith(route))
+  const isAuthRoute = pathname === '/login' || pathname === '/register'
+
+  // Permitir todas as rotas públicas
+  if (isPublicRoute || isPublicApiRoute) {
     return NextResponse.next()
   }
 
+  // Para rotas de autenticação, redirecionar se já logado
   if (isAuthRoute) {
-    if (isLoggedIn) {
+    // Verificar se há token de sessão (simplificado)
+    const token = request.cookies.get('authjs.session-token') || request.cookies.get('__Secure-authjs.session-token')
+    if (token) {
       return NextResponse.redirect(new URL('/dashboard', nextUrl))
     }
     return NextResponse.next()
   }
 
-  if (!isLoggedIn && !isPublicRoute) {
+  // Para outras rotas, verificar autenticação
+  const token = request.cookies.get('authjs.session-token') || request.cookies.get('__Secure-authjs.session-token')
+  if (!token) {
     return NextResponse.redirect(new URL('/login', nextUrl))
   }
 
   return NextResponse.next()
-})
+}
 
 export const config = {
   matcher: ['/((?!.+\\.[\\w]+$|_next).*)', '/', '/(api|trpc)(.*)'],
