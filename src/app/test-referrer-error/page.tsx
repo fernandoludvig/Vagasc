@@ -1,6 +1,7 @@
 'use client'
 
 import { useState, useEffect } from 'react'
+import { Decimal } from '@prisma/client/runtime/library'
 import GoogleMap from '@/components/maps/GoogleMap'
 import ParkingSpacesMap from '@/components/maps/ParkingSpacesMap'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
@@ -81,8 +82,8 @@ export default function TestReferrerErrorPage() {
       latitude: -27.5954,
       longitude: -48.5480,
       images: [],
-      pricePerHour: 8.50,
-      pricePerDay: 50.00,
+      pricePerHour: new Decimal(8.50),
+      pricePerDay: new Decimal(50.00),
       isActive: true,
       autoApprove: true,
       instructions: 'Instruções de teste',
