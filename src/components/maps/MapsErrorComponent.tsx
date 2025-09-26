@@ -117,7 +117,7 @@ export function MapsErrorComponent({ error, className = '', height = '400px' }: 
     )
   }
 
-  // Componente de erro genérico para outros erros
+  {/* Componente de erro genérico para outros erros */}
   return (
     <div 
       className={`flex items-center justify-center bg-red-50 border border-red-200 rounded-lg ${className}`} 
