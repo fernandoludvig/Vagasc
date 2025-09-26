@@ -1,7 +1,7 @@
 'use client'
 
 import { AlertTriangle, ExternalLink, Copy, Check } from 'lucide-react'
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { Button } from '@/components/ui/button'
 
 interface MapsErrorComponentProps {
@@ -12,20 +12,33 @@ interface MapsErrorComponentProps {
 
 export function MapsErrorComponent({ error, className = '', height = '400px' }: MapsErrorComponentProps) {
   const [linkCopied, setLinkCopied] = useState(false)
+  const [isClient, setIsClient] = useState(false)
+
+  useEffect(() => {
+    setIsClient(true)
+  }, [])
 
   const copyLink = () => {
-    navigator.clipboard.writeText('AIzaSyDKyyxv3ktBWZcmsk1GyyamnahmhwvcKSc')
-    setLinkCopied(true)
-    setTimeout(() => setLinkCopied(false), 2000)
+    if (typeof navigator !== 'undefined' && navigator.clipboard) {
+      navigator.clipboard.writeText('AIzaSyDKyyxv3ktBWZcmsk1GyyamnahmhwvcKSc')
+      setLinkCopied(true)
+      setTimeout(() => setLinkCopied(false), 2000)
+    }
   }
 
   const openGoogleCloudConsole = () => {
-    window.open('https://console.cloud.google.com/apis/credentials', '_blank')
+    if (typeof window !== 'undefined') {
+      window.open('https://console.cloud.google.com/apis/credentials', '_blank')
+    }
   }
 
   const isRefererError = error.includes('RefererNotAllowedMapError') || error.includes('🔑 ERRO')
-  // Detecta localhost:3001
-  const isLocalhostError = window.location.hostname === 'localhost' && (window.location.port === '3001')
+  
+  // Detecta localhost:3001 - só executa no cliente
+  const isLocalhostError = isClient && 
+    typeof window !== 'undefined' && 
+    window.location.hostname === 'localhost' && 
+    window.location.port === '3001'
 
   if (isRefererError) {
     return (
@@ -65,12 +78,14 @@ export function MapsErrorComponent({ error, className = '', height = '400px' }: 
                   )}
                 </ul>
               </ol>
-              {isLocalhostError && (
+              {isLocalhostError && isClient && (
                 <div className="bg-yellow-50 border border-yellow-200 p-2 rounded mt-2 text-xs text-yellow-800">
-                  🔧 <strong>Url atual:</strong> {window.location.href}<br/>
+                  🔧 <strong>Url atual:</strong> {typeof window !== 'undefined' ? window.location.href : 'Carregando...'}<br/>
                   ✅ <strong>Garanta que &quot;http://localhost:3001/*&quot; inclui esta página!</strong><br/>
                   🔍 <strong>Se ainda não funcionar, adicione especificamente:</strong><br/>
-                  <code className="bg-yellow-200 px-1 rounded">{window.location.href}/*</code>
+                  <code className="bg-yellow-200 px-1 rounded">
+                    {typeof window !== 'undefined' ? `${window.location.href}/*` : 'Carregando...'}
+                  </code>
                 </div>
               )}
             </div>
