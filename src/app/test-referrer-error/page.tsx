@@ -81,9 +81,20 @@ export default function TestReferrerErrorPage() {
       latitude: -27.5954,
       longitude: -48.5480,
       pricePerHour: 8.50,
-      spaceType: 'PRIVATE',
-      vehicleTypes: ['CAR'],
-      amenities: ['COVERED']
+      spaceType: 'PRIVATE' as const,
+      vehicleTypes: ['CAR'] as const,
+      amenities: ['COVERED'] as const,
+      owner: {
+        id: 'test-owner',
+        name: 'Test Owner',
+        email: 'test@example.com',
+        role: 'USER' as const,
+        createdAt: new Date(),
+        updatedAt: new Date()
+      },
+      reviews: [],
+      bookings: [],
+      availability: []
     }
   ]
 
