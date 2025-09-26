@@ -15,16 +15,23 @@ declare global {
 }
 
 export default function TestMapsPage() {
+  // Forçar renderização apenas no cliente
+  const [isClient, setIsClient] = useState(false)
   const [status, setStatus] = useState('Iniciando...')
-  const [demoMaps, setDemoMaps] = useState([
+  const [demoMaps] = useState([
     { id: '1', lat: -27.5954, lng: -48.5480, title: 'Centro', description: 'Centro de Florianópolis' },
     { id: '2', lat: -27.5804, lng: -48.5160, title: 'Lagoa', description: 'Região da Lagoa' },
     { id: '3', lat: -27.5227, lng: -48.5080, title: 'Jurerê', description: 'Jurerê Internacional' }
   ])
-
+  
   useEffect(() => {
+    setIsClient(true)
+  }, [])
+  
+  useEffect(() => {
+    if (!isClient) return
     const checkGoogleMaps = () => {
-      if (window.google && window.google.maps) {
+      if (typeof window !== 'undefined' && window.google && window.google.maps) {
         setStatus('✅ Google Maps carregado com sucesso!')
       } else {
         setStatus('⏳ Aguardando carregamento do Google Maps...')
@@ -37,7 +44,7 @@ export default function TestMapsPage() {
     // Verificar a cada segunda até carregar
     const interval = setInterval(() => {
       checkGoogleMaps()
-      if (window.google && window.google.maps) {
+      if (typeof window !== 'undefined' && window.google && window.google.maps) {
         clearInterval(interval)
       }
     }, 1000)
@@ -46,7 +53,11 @@ export default function TestMapsPage() {
     setTimeout(() => clearInterval(interval), 10000)
     
     return () => clearInterval(interval)
-  }, [])
+  }, [isClient])
+  
+  if (!isClient) {
+    return <div>Carregando...</div>
+  }
 
   const markers = demoMaps.map(place => ({
     id: place.id,

@@ -55,19 +55,19 @@ export default function GoogleMap({
     if (!isLoaded || !mapRef.current) return
 
     // Verificação adicional antes de criar o mapa
-    if (!window.google || !window.google.maps || !window.google.maps.Map) {
+    if (typeof window === 'undefined' || !window.google || !window.google.maps || !window.google.maps.Map) {
       console.warn('Google Maps ainda não está disponível')
       return
     }
 
     try {
-      const mapInstance = new window.google.maps.Map(mapRef.current, {
+      const mapInstance = new (window as any).google.maps.Map(mapRef.current, {
         center,
         zoom,
         ...DEFAULT_MAP_OPTIONS
       })
 
-      const geocoderInstance = new window.google.maps.Geocoder()
+      const geocoderInstance = new (window as any).google.maps.Geocoder()
       setGeocoder(geocoderInstance)
       setMap(mapInstance)
     } catch (err) {
@@ -84,12 +84,12 @@ export default function GoogleMap({
     input.placeholder = 'Digite um endereço...'
     input.className = 'w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500'
     
-    const searchBoxInstance = new window.google.maps.places.SearchBox(input)
+    const searchBoxInstance = new (window as any).google.maps.places.SearchBox(input)
     setSearchBox(searchBoxInstance)
     setSearchInput(input)
 
     // Adicionar o input ao mapa
-    map.controls[window.google.maps.ControlPosition.TOP_LEFT].push(input)
+    map.controls[(window as any).google.maps.ControlPosition.TOP_LEFT].push(input)
 
     // Event listener para seleção de lugar
     searchBoxInstance.addListener('places_changed', () => {

@@ -34,7 +34,7 @@ export const useGoogleMaps = (options: UseGoogleMapsOptions = {}): UseGoogleMaps
   const loadScript = useCallback(async () => {
     try {
       // Verificar se já está carregado
-      if (window.google && window.google.maps && window.google.maps.Map) {
+      if (typeof window !== 'undefined' && window.google && window.google.maps && window.google.maps.Map) {
         setIsLoaded(true)
         setIsLoading(false)
         return
@@ -55,7 +55,7 @@ export const useGoogleMaps = (options: UseGoogleMapsOptions = {}): UseGoogleMaps
       if (existingScript) {
         // Script já existe, aguardar carregamento
         const checkLoaded = () => {
-          if (window.google && window.google.maps && window.google.maps.Map) {
+          if (typeof window !== 'undefined' && window.google && window.google.maps && window.google.maps.Map) {
             setIsLoaded(true)
             setIsLoading(false)
           } else {
@@ -67,7 +67,8 @@ export const useGoogleMaps = (options: UseGoogleMapsOptions = {}): UseGoogleMaps
       }
 
       // Configurar função global para erro de autenticação
-      window.gm_authFailure = () => {
+      if (typeof window !== 'undefined') {
+        window.gm_authFailure = () => {
         const errorDetails = (() => {
           const currentHost = window.location.host
           const currentUrl = window.location.href
@@ -81,6 +82,7 @@ export const useGoogleMaps = (options: UseGoogleMapsOptions = {}): UseGoogleMaps
         
         setError(errorDetails)
         setIsLoading(false)
+        }
       }
 
       // Criar uma promessa para aguardar carregamento
@@ -93,16 +95,17 @@ export const useGoogleMaps = (options: UseGoogleMapsOptions = {}): UseGoogleMaps
         script.defer = true
         
         // Callback global que será chamado quando o script carregar
-        window.initGoogleMap = () => {
+        if (typeof window !== 'undefined') {
+          window.initGoogleMap = () => {
           // Verificação adicional antes de marcar como carregado
-          if (window.google && window.google.maps && window.google.maps.Map) {
+          if (typeof window !== 'undefined' && window.google && window.google.maps && window.google.maps.Map) {
             setIsLoaded(true)
             setIsLoading(false)
             setError(null)
             resolve()
           } else {
             setTimeout(() => {
-              if (window.google && window.google.maps && window.google.maps.Map) {
+              if (typeof window !== 'undefined' && window.google && window.google.maps && window.google.maps.Map) {
                 setIsLoaded(true)
                 setIsLoading(false)
                 setError(null)
@@ -110,11 +113,12 @@ export const useGoogleMaps = (options: UseGoogleMapsOptions = {}): UseGoogleMaps
               }
             }, 100)
           }
+          }
         }
         
         script.onload = () => {
           // Verificar novamente quando o script carrega
-          if (window.google && window.google.maps && window.google.maps.Map) {
+          if (typeof window !== 'undefined' && window.google && window.google.maps && window.google.maps.Map) {
             setIsLoaded(true)
             setIsLoading(false)
             setError(null)

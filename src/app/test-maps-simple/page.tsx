@@ -22,7 +22,7 @@ export default function TestMapsSimplePage() {
         setStatus('Carregando script do Google Maps...')
         
         // Verificar se já está carregado
-        if (window.google && window.google.maps) {
+        if (typeof window !== 'undefined' && window.google && window.google.maps) {
           setStatus('Google Maps já carregado')
           createMap()
           return
@@ -36,15 +36,17 @@ export default function TestMapsSimplePage() {
         script.defer = true
         
         // Configurar callback global
-        window.initTestMap = () => {
-          setStatus('Script carregado, criando mapa...')
-          createMap()
-        }
-        
-        // Configurar função para erros de autenticação
-        window.gm_authFailure = function() {
-          setError('Erro de autenticação - Verifique a chave da API')
-          setStatus('Erro de API')
+        if (typeof window !== 'undefined') {
+          window.initTestMap = () => {
+            setStatus('Script carregado, criando mapa...')
+            createMap()
+          }
+          
+          // Configurar função para erros de autenticação
+          window.gm_authFailure = function() {
+            setError('Erro de autenticação - Verifique a chave da API')
+            setStatus('Erro de API')
+          }
         }
         
         script.onload = () => {
@@ -71,7 +73,7 @@ export default function TestMapsSimplePage() {
         return
       }
       
-      if (!window.google || !window.google.maps) {
+      if (typeof window === 'undefined' || !window.google || !window.google.maps) {
         setError('Google Maps não carregado')
         return
       }

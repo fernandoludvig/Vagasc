@@ -67,8 +67,8 @@ export async function POST(request: NextRequest) {
         },
       ],
       mode: 'payment',
-      success_url: `${process.env.NEXTAUTH_URL}/bookings?success=true&session_id={CHECKOUT_SESSION_ID}`,
-      cancel_url: `${process.env.NEXTAUTH_URL}/bookings?cancelled=true`,
+      success_url: `${process.env.NEXTAUTH_URL || 'http://localhost:3001'}/bookings?success=true&session_id={CHECKOUT_SESSION_ID}`,
+      cancel_url: `${process.env.NEXTAUTH_URL || 'http://localhost:3001'}/bookings?cancelled=true`,
       metadata: {
         bookingId: bookingId,
         userId: session.user.id,
