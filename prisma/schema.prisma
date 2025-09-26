@@ -1,0 +1,225 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id            String    @id @default(cuid())
+  email         String    @unique
+  name          String?
+  phone         String?
+  password      String?
+  avatar        String?
+  emailVerified DateTime?
+  isVerified    Boolean   @default(false)
+  role          UserRole  @default(CLIENT)
+  createdAt     DateTime  @default(now())
+  updatedAt     DateTime  @updatedAt
+
+  accounts      Account[]
+  sessions      Session[]
+  ownedSpaces   ParkingSpace[]
+  bookings      Booking[]
+  reviews       Review[]
+  sentReviews   Review[]       @relation("ReviewAuthor")
+
+  @@map("users")
+}
+
+model Account {
+  id                String  @id @default(cuid())
+  userId            String
+  type              String
+  provider          String
+  providerAccountId String
+  refresh_token     String? @db.Text
+  access_token      String? @db.Text
+  expires_at        Int?
+  token_type        String?
+  scope             String?
+  id_token          String? @db.Text
+  session_state     String?
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([provider, providerAccountId])
+  @@map("accounts")
+}
+
+model Session {
+  id           String   @id @default(cuid())
+  sessionToken String   @unique
+  userId       String
+  expires      DateTime
+  user         User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@map("sessions")
+}
+
+model ParkingSpace {
+  id              String            @id @default(cuid())
+  title           String
+  description     String?
+  address         String
+  latitude        Float
+  longitude       Float
+  images          String[]
+  pricePerHour    Decimal           @db.Decimal(10, 2)
+  pricePerDay     Decimal?          @db.Decimal(10, 2)
+  isActive        Boolean           @default(true)
+  autoApprove     Boolean           @default(true)
+  instructions    String?
+  amenities       SpaceAmenity[]
+  spaceType       SpaceType         @default(PRIVATE)
+  vehicleTypes    VehicleType[]
+  
+  ownerId         String
+  owner           User              @relation(fields: [ownerId], references: [id])
+  bookings        Booking[]
+  reviews         Review[]
+  availability    Availability[]
+  
+  createdAt       DateTime          @default(now())
+  updatedAt       DateTime          @updatedAt
+
+  @@map("parking_spaces")
+}
+
+model Availability {
+  id              String       @id @default(cuid())
+  spaceId         String
+  date            DateTime     @db.Date
+  startTime       DateTime     @db.Time
+  endTime         DateTime     @db.Time
+  isBlocked       Boolean      @default(false)
+  
+  space           ParkingSpace @relation(fields: [spaceId], references: [id], onDelete: Cascade)
+  
+  @@unique([spaceId, date, startTime])
+  @@map("availability")
+}
+
+model Booking {
+  id              String          @id @default(cuid())
+  spaceId         String
+  userId          String
+  startDateTime   DateTime
+  endDateTime     DateTime
+  totalAmount     Decimal         @db.Decimal(10, 2)
+  platformFee     Decimal         @db.Decimal(10, 2)
+  ownerAmount     Decimal         @db.Decimal(10, 2)
+  status          BookingStatus   @default(PENDING)
+  accessCode      String?
+  specialRequests String?
+  
+  stripePaymentId String?
+  stripeSessionId String?
+  stripePaymentIntentId String?
+  paymentStatus   PaymentStatus   @default(PENDING)
+  paidAt          DateTime?
+  
+  space           ParkingSpace    @relation(fields: [spaceId], references: [id])
+  user            User            @relation(fields: [userId], references: [id])
+  review          Review?
+  payment         Payment?
+  
+  createdAt       DateTime        @default(now())
+  updatedAt       DateTime        @updatedAt
+
+  @@map("bookings")
+}
+
+model Review {
+  id          String   @id @default(cuid())
+  bookingId   String   @unique
+  spaceId     String
+  authorId    String
+  targetId    String
+  rating      Int      @db.SmallInt
+  comment     String?
+  type        ReviewType
+  
+  booking     Booking       @relation(fields: [bookingId], references: [id])
+  space       ParkingSpace  @relation(fields: [spaceId], references: [id])
+  author      User          @relation("ReviewAuthor", fields: [authorId], references: [id])
+  target      User          @relation(fields: [targetId], references: [id])
+  
+  createdAt   DateTime      @default(now())
+
+  @@map("reviews")
+}
+
+enum UserRole {
+  CLIENT
+  HOST
+  ADMIN
+}
+
+enum SpaceType {
+  PRIVATE
+  COMMERCIAL
+  RESIDENTIAL
+}
+
+enum VehicleType {
+  CAR
+  MOTORCYCLE
+  TRUCK
+  VAN
+  BICYCLE
+}
+
+enum SpaceAmenity {
+  COVERED
+  SECURITY_CAMERA
+  ELECTRIC_CHARGING
+  ACCESSIBLE
+  LIGHTING
+  GATED
+}
+
+enum BookingStatus {
+  PENDING
+  CONFIRMED
+  IN_PROGRESS
+  COMPLETED
+  CANCELLED
+  REJECTED
+}
+
+enum PaymentStatus {
+  PENDING
+  PAID
+  FAILED
+  REFUNDED
+}
+
+model Payment {
+  id                      String          @id @default(cuid())
+  bookingId               String          @unique
+  amount                  Decimal         @db.Decimal(10, 2)
+  platformFee             Decimal         @db.Decimal(10, 2)
+  ownerAmount             Decimal         @db.Decimal(10, 2)
+  status                  PaymentStatus   @default(PENDING)
+  stripePaymentIntentId   String?
+  stripeSessionId         String?
+  
+  booking                 Booking         @relation(fields: [bookingId], references: [id])
+  
+  createdAt               DateTime        @default(now())
+  updatedAt               DateTime        @updatedAt
+
+  @@map("payments")
+}
+
+enum ReviewType {
+  SPACE_REVIEW
+  USER_REVIEW
+}
